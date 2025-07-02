@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: EmotionalMessenger
 
   redis:
-    image: redis:7
+    image: redis:7-alpine
     container_name: soe_redis
     restart: always
     ports:
