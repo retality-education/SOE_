@@ -19,7 +19,7 @@ def translate_ru_to_en(text: str) -> str:
         return translated.text
     except Exception as e:
         print("Ошибка при переводе:", e)
-        raiseЦ
+        raise
 
 @app.post("/analyze")
 async def analyze(request: TextRequest):
