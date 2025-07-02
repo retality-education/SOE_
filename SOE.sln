@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36212.18 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOE", "SOE\SOE.csproj", "{6CFE0A00-44CB-45BE-BF36-3B58E555777A}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "emotion_service", "emotion_service\emotion_service.pyproj", "{8C397595-09AE-4EA9-B83D-6DED83A77405}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CFE0A00-44CB-45BE-BF36-3B58E555777A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CFE0A00-44CB-45BE-BF36-3B58E555777A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CFE0A00-44CB-45BE-BF36-3B58E555777A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CFE0A00-44CB-45BE-BF36-3B58E555777A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C397595-09AE-4EA9-B83D-6DED83A77405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C397595-09AE-4EA9-B83D-6DED83A77405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {061AB7C5-8FAD-4480-8813-163EC1DF83A8}
+	EndGlobalSection
+EndGlobal
