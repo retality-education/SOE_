@@ -6,7 +6,7 @@ services:
     container_name: soe_postgres
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
@@ -33,7 +33,7 @@ services:
       start_period: 10s
 
   dotnet_app:
-    build: ./dotnet-app
+    build: ./SOE
     container_name: soe_dotnet_app
     restart: always
     depends_on:

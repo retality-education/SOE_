@@ -1,4 +1,4 @@
-FROM postgres:16-alpine
+FROM postgres:16
 
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=12345

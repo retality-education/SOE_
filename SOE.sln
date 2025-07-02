@@ -7,17 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOE", "SOE\SOE.csproj", "{6
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
-	ProjectSection(SolutionItems) = preProject
-		Dockerfile = Dockerfile
-		init.sql = init.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "python", "python", "{683D70F5-BD74-4B43-A01A-697007A10218}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "emotion_service", "emotion_service", "{683D70F5-BD74-4B43-A01A-697007A10218}"
 	ProjectSection(SolutionItems) = preProject
 		emotion_service\Dockerfile = emotion_service\Dockerfile
 		emotion_service\emotion_service.py = emotion_service\emotion_service.py
 		emotion_service\requirements.txt = emotion_service\requirements.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{A9ABE80F-8C6F-4A5A-9B7B-4B3BFCF3476B}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		init.sql = init.sql
 	EndProjectSection
 EndProject
 Global
