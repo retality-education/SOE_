@@ -12,6 +12,6 @@ namespace SOE.Repositories
         /// <summary>
         /// Загружает историю сообщений без анализа.
         /// </summary>
-        Task<List<Message>> GetChatHistoryAsync(string chatId, int offset, int limit);
+        Task<List<ChatMessage>> GetChatHistoryAsync(string chatId, int offset, int limit);
     }
 }

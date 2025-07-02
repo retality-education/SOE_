@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    build: ./postgres
+    container_name: soe_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: EmotionalMessenger
+
+  redis:
+    image: redis:7
+    container_name: soe_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  emotion_service:
+    build: ./emotion_service
+    container_name: emotion_service
+    restart: always
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/analyze"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  dotnet_app:
+    build: ./dotnet-app
+    container_name: soe_dotnet_app
+    restart: always
+    depends_on:
+      emotion_service:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=EmotionalMessenger;Username=postgres;Password=12345
+      - Redis__Host=redis
+    ports:
+      - "5000:80"

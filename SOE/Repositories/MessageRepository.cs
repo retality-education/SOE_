@@ -29,7 +29,7 @@ namespace SOE.Repositories
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<List<Message>> GetChatHistoryAsync(string chatId, int offset, int limit)
+        public async Task<List<ChatMessage>> GetChatHistoryAsync(string chatId, int offset, int limit)
         {
             const string query = """
             SELECT * FROM messages 
@@ -45,16 +45,17 @@ namespace SOE.Repositories
             cmd.Parameters.AddWithValue("limit", limit);
 
             var reader = await cmd.ExecuteReaderAsync();
-            var messages = new List<Message>();
+            var messages = new List<ChatMessage>();
 
             while (await reader.ReadAsync())
             {
-                messages.Add(new Message
+                messages.Add(new ChatMessage
                 {
                     Id = reader.GetGuid(0),
                     ChatId = reader.GetString(1),
-                    Text = reader.GetString(2),
-                    Timestamp = reader.GetDateTime(3)
+                    UserId = reader.GetString(2),
+                    Text = reader.GetString(3),
+                    Timestamp = reader.GetDateTime(4)
                 });
             }
 

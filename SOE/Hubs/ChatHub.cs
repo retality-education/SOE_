@@ -67,6 +67,12 @@ namespace SOE.Hubs
             await _moodCache.UpdateMoodAsync(chatId, analysis.Mood);
 
             await Clients.Group(chatId).SendAsync("ReceiveMessage", message);
+            await Clients.Group(chatId).SendAsync("ChatUpdated", new ChatUpdate
+            {
+                ChatId = chatId,
+                LastMessage = message.Text,
+                Timestamp = message.Timestamp
+            });
 
             return new SendMessageResult
             {
@@ -76,12 +82,20 @@ namespace SOE.Hubs
         }
 
         // Загрузка истории сообщений
-        public async Task<List<Message>> LoadHistory(string chatId, int offset, int limit)
+        public async Task<List<ChatMessage>> LoadHistory(string chatId, int offset, int limit)
         {
             if (string.IsNullOrEmpty(Context.UserIdentifier))
                 throw new HubException("Требуется авторизация");
 
             return await _messageRepo.GetChatHistoryAsync(chatId, offset, limit);
+        }
+        // Получение всех чатов пользователя
+        public async Task<List<ChatSummary>> GetMyChats()
+        {
+            if (string.IsNullOrEmpty(Context.UserIdentifier))
+                throw new HubException("Требуется авторизация");
+
+            return await _chatRepo.GetChatsForUserAsync(Context.UserIdentifier);
         }
     }
 }
