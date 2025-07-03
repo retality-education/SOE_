@@ -13,7 +13,7 @@ namespace SOE.Services
     {
         private readonly HttpClient _httpClient = new()
         {
-            BaseAddress = new Uri("http://localhost:5001")
+            BaseAddress = new Uri("http://emotion_service:5001")
         };
 
         public async Task<(string Emotion, float Confidence)> AnalyzeEmotion(string text)

@@ -12,8 +12,8 @@ services:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=EmotionalMessenger;Username=postgres;Password=12345
-      - Redis__Host=redis
+      - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=EmotionalMessenger;Username=postgres;Password=12345
+      - ConnectionStrings__Redis=redis:6379,abortConnect=false
     ports:
       - "5000:5000"
   postgres:
