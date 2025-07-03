@@ -2,8 +2,11 @@
 {
     public class MoodAnalysisResult
     {
-        public string Mood { get; set; }
-        public string Hint { get; set; }       // Подсказка для отправителя
-        public string BackgroundColor { get; set; }  // HEX-цвет фона
+        public string Mood { get; init; }
+        public string Hint { get; init; }
+        public string BackgroundColor { get; init; }
+        public string TextColor { get; init; }
+        public string[] SuggestedPhrases { get; init; }
     }
+
 }

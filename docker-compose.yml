@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dotnet_app:
-    image: retality/soe-dotnet_app:latest
+    build: ./SOE
     container_name: soe_dotnet_app
     depends_on:
       - postgres
@@ -14,9 +14,8 @@ services:
     ports:
       - "5000:5000"
     platform: linux/amd64
-
   postgres:
-    image: retality/soe-postgres:latest
+    build: ./postgres
     container_name: soe_postgres
     ports:
       - "5433:5432"
@@ -25,7 +24,6 @@ services:
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: EmotionalMessenger
     platform: linux/amd64
-
   redis:
     image: redis:7-alpine
     container_name: soe_redis
@@ -34,7 +32,7 @@ services:
     platform: linux/amd64
 
   emotion_service:
-    image: retality/emotion_service:latest
+    build: ./emotion_service
     container_name: emotion_service
     ports:
       - "5001:5001"

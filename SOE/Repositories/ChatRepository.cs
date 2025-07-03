@@ -32,18 +32,38 @@ namespace SOE.Repositories
 
         public async Task AddUserToChatAsync(string chatId, string userId)
         {
-            const string query = """
-            INSERT INTO chat_users (chat_id, user_id)
-            VALUES (@chatId, @userId)
-            ON CONFLICT DO NOTHING
-            """;
+            const string checkChatQuery = """
+                SELECT 1 FROM chats WHERE id = @chatId
+                """;
+
+                        const string insertQuery = """
+                INSERT INTO chat_users (chat_id, user_id)
+                VALUES (@chatId, @userId)
+                ON CONFLICT DO NOTHING
+                """;
 
             await _connection.OpenAsync();
-            await using var cmd = new NpgsqlCommand(query, _connection);
-            cmd.Parameters.AddWithValue("chatId", chatId);
-            cmd.Parameters.AddWithValue("userId", userId);
-            await cmd.ExecuteNonQueryAsync();
+
+            // Проверяем наличие чата
+            await using (var checkCmd = new NpgsqlCommand(checkChatQuery, _connection))
+            {
+                checkCmd.Parameters.AddWithValue("chatId", chatId);
+                var exists = await checkCmd.ExecuteScalarAsync();
+                if (exists is null)
+                {
+                    throw new InvalidOperationException($"Чат с id {chatId} не существует.");
+                }
+            }
+
+            // Добавляем пользователя в чат
+            await using (var insertCmd = new NpgsqlCommand(insertQuery, _connection))
+            {
+                insertCmd.Parameters.AddWithValue("chatId", chatId);
+                insertCmd.Parameters.AddWithValue("userId", userId);
+                await insertCmd.ExecuteNonQueryAsync();
+            }
         }
+
 
         public async Task<bool> ChatExistsAsync(string chatId)
         {

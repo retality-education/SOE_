@@ -36,14 +36,38 @@ namespace SOE.Hubs
         }
 
         // Вступление в существующий чат
-        public async Task JoinChat(string chatId)
+        public async Task<bool> JoinChat(string chatId)
         {
             if (string.IsNullOrEmpty(Context.UserIdentifier))
                 throw new HubException("Требуется авторизация");
 
-            await _chatRepo.AddUserToChatAsync(chatId, Context.UserIdentifier);
-            await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
-            await Clients.Group(chatId).SendAsync("UserJoined", Context.UserIdentifier);
+            try
+            {
+                await _chatRepo.AddUserToChatAsync(chatId, Context.UserIdentifier);
+
+                await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
+
+                var recentMessages = await _messageRepo.GetChatHistoryAsync(chatId, 0, 10);
+                var combinedText = string.Join(" ", recentMessages.Select(m => m.Text));
+                var mood = await _moodService.AnalyzeTextAsync(combinedText);
+
+                await Clients.Caller.SendAsync("ChatMood", new
+                {
+                    Mood = mood.Mood,
+                    BackgroundColor = mood.BackgroundColor,
+                    TextColor = mood.TextColor,
+                    SuggestedPhrases = mood.SuggestedPhrases
+                });
+
+
+                await Clients.Group(chatId).SendAsync("UserJoined", Context.UserIdentifier);
+            }
+            catch (InvalidOperationException e) { 
+                Console.WriteLine("Такого чата нету");
+                return false;
+            }
+            return true;
+
         }
 
         // Отправка сообщения
