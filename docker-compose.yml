@@ -15,6 +15,7 @@ services:
       - ConnectionStrings__Redis=redis:6379,abortConnect=false
     ports:
       - "5000:5000"
+    platform: linux/amd64
   postgres:
     build: ./postgres
     container_name: soe_postgres
@@ -29,7 +30,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+    platform: linux/amd64
   redis:
     image: redis:7-alpine
     container_name: soe_redis
@@ -40,12 +41,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    platform: linux/amd64
 
   emotion_service:
     build: ./emotion_service
     container_name: emotion_service
     ports:
       - "5001:5001"
+    platform: linux/amd64
 
 
   
