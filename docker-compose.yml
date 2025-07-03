@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  dotnet_app:
+    build: ./SOE
+    container_name: soe_dotnet_app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=EmotionalMessenger;Username=postgres;Password=12345
+      - Redis__Host=redis
+    ports:
+      - "5000:5000"
   postgres:
     build: ./postgres
     container_name: soe_postgres
@@ -37,18 +52,4 @@ services:
       - "5001:5001"
 
 
-  dotnet_app:
-    build: ./SOE
-    container_name: soe_dotnet_app
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=EmotionalMessenger;Username=postgres;Password=12345
-      - Redis__Host=redis
-    ports:
-      - "5000:5000"
+  
