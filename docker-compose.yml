@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dotnet_app:
-    build: ./SOE
+    image: retality.cr.cloud.ru/soe@sha256:a8fd6f884cd4a53f54e2f287dcb3b3d6594c6569c9566917d1631c71ccc5ba2f
     container_name: soe_dotnet_app
     depends_on:
       - postgres
@@ -15,7 +15,7 @@ services:
       - "5000:5000"
     platform: linux/amd64
   postgres:
-    build: ./postgres
+    image: retality.cr.cloud.ru/soe@sha256:9abd8c9ebb24b4f579cbcd6046bc75749a1395c6f3b90d30722305019d859588
     container_name: soe_postgres
     ports:
       - "5433:5432"
@@ -32,7 +32,7 @@ services:
     platform: linux/amd64
 
   emotion_service:
-    build: ./emotion_service
+    image: retality.cr.cloud.ru/soe@sha256:7f282e22ce1f76974fae5d32cc40931892ce1c4a20d794a35645f16108fe63e4
     container_name: emotion_service
     ports:
       - "5001:5001"
