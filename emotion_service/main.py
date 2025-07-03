@@ -21,6 +21,10 @@ def translate_ru_to_en(text: str) -> str:
         print("Ошибка при переводе:", e)
         raise
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 @app.post("/analyze")
 async def analyze(request: TextRequest):
     translated = translate_ru_to_en(request.text)
