@@ -35,12 +35,7 @@ services:
     restart: always
     ports:
       - "5001:5001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
-      interval: 5s
-      timeout: 7s
-      retries: 5
-      start_period: 10s
+
 
   dotnet_app:
     build: ./SOE
@@ -50,8 +45,6 @@ services:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_healthy
-      emotion_service:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
