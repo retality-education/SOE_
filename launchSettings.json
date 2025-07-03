@@ -1,8 +1,16 @@
 {
   "profiles": {
-    "Docker Compose": {
+    "meow": {
       "commandName": "DockerCompose",
-      "commandVersion": "1.0"
+      "commandVersion": "1.0",
+      "composeLaunchAction": "None",
+      "composeLaunchServiceName": "dotnet_app",
+      "serviceActions": {
+        "dotnet_app": "StartDebugging",
+        "emotion_service": "StartWithoutDebugging",
+        "postgres": "StartWithoutDebugging",
+        "redis": "StartWithoutDebugging"
+      }
     }
   }
 }
