@@ -1,11 +1,8 @@
 ﻿namespace SOE.Models
 {
-    public class ChatMessage
+    public class ChatMessage : Message
     {
-        public Guid Id { get; set; }          // ID сообщения
-        public string ChatId { get; set; }    // ID чата
-        public string UserId { get; set; }
-        public string Text { get; set; }      // Текст сообщения
-        public DateTime Timestamp { get; set; } // Время отправки
+        public string Username { get; set; }
     }
+
 }
