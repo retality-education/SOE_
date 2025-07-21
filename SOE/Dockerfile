@@ -11,7 +11,7 @@ ENV ASPNETCORE_HTTP_PORTS=5000
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["SOE/SOE.csproj", "SOE/"]  # Обратите внимание на путь
+COPY ["SOE/SOE.csproj", "SOE/"]
 RUN dotnet restore "SOE/SOE.csproj"
 COPY . .
 RUN dotnet publish "SOE/SOE.csproj" -c Release -o /app/publish
@@ -19,4 +19,4 @@ RUN dotnet publish "SOE/SOE.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "SOE.dll"]  # Должно совпадать с именем проекта
+ENTRYPOINT ["dotnet", "SOE.dll"]

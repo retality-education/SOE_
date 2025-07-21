@@ -124,7 +124,7 @@ app.MapGet("/healthy", async (NpgsqlConnection db, IConnectionMultiplexer redis)
     }
 });
 
-app.Run();
+app.UseUrls("http://*:5000");
 
 string GenerateJwtToken(User user, IConfiguration config)
 {
