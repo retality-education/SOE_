@@ -1,6 +1,6 @@
 @SOE_HostAddress = http://localhost:5290
 
-GET {{SOE_HostAddress}}/weatherforecast/
+GET {{SOE_HostAddress}}/healthy/
 Accept: application/json
 
 ###

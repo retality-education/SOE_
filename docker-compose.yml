@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   dotnet_app:
-    image: mydotnet:1
+    build:
+      context: ./SOE
+      dockerfile: Dockerfile
     container_name: soe_dotnet_app
     depends_on:
       - postgres
@@ -17,14 +19,17 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: ["CMD", "dotnet","soe_dotnet_app.dll", "check-health"]
-      interval: 30s
+      disable: false
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/healthy || exit 1"]
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 40s 
+      start_period: 30s
     
   postgres:
-    image: mypostgres:1
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
     container_name: soe_postgres
     ports:
       - "5433:5432"
@@ -34,7 +39,7 @@ services:
       POSTGRES_DB: EmotionalMessenger
     platform: linux/amd64
     networks:
-     - app_network
+      - app_network
 
   redis:
     image: redis:7-alpine
@@ -43,18 +48,18 @@ services:
       - "6379:6379"
     platform: linux/amd64
     networks:
-     - app_network
-
+      - app_network
 
   emotion_service:
-    image: mypython:1
+    build:
+      context: ./emotion_service
+      dockerfile: Dockerfile
     container_name: emotion_service
     ports:
       - "5001:5001"
     platform: linux/amd64
     networks:
-     - app_network
-
+      - app_network
 
   nginx:
     image: nginx:alpine
@@ -63,13 +68,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certbot/conf:/etc/letsencrypt  # Для HTTPS
+      - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    depends_on:
-      dotnet_app:
-        condition: service_healthy
-      emotion_service:
-        condition: service_started
     networks:
       - app_network
     restart: unless-stopped

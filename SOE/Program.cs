@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+п»їusing Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
@@ -16,14 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
-builder.Services.AddScoped<NpgsqlConnection>(_ =>
+builder.Services.AddScoped<NpgsqlConnection>(_ =>   
     new NpgsqlConnection(builder.Configuration.GetConnectionString("Postgres")));
-// Репозитории
+// Р РµРїРѕР·РёС‚РѕСЂРёРё
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
-// Сервисы
+// РЎРµСЂРІРёСЃС‹
 builder.Services.AddSingleton<IChatMoodCache, RedisChatMoodCache>();
 builder.Services.AddScoped<EmotionService>();
 
@@ -31,7 +31,7 @@ builder.Services.AddScoped<EmotionService>();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
-// Аутентификация JWT
+// РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -98,11 +98,31 @@ app.MapPost("/api/auth/login", async (LoginRequest request, IUserRepository user
 
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<MoodAnalysisHub>("/moodHub");
+app.MapGet("/healthy", async (NpgsqlConnection db, IConnectionMultiplexer redis) =>
+{
+    try
+    {
+        // ВїВїВїВїВїВїВїВї ВїВїВїВїВїВїВїВїВїВїВї Вї PostgreSQL
+        await db.OpenAsync();
+        await db.CloseAsync();
 
-app.MapGet("/health", ()=>
+        // ВїВїВїВїВїВїВїВї ВїВїВїВїВїВїВїВїВїВїВї Вї Redis
+        var redisDb = redis.GetDatabase();
+        await redisDb.PingAsync();
+
+        return Results.Ok(new
         {
-        return TypedResults.Ok();
+            status = "Healthy",
+            timestamp = DateTime.UtcNow
         });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(
+            detail: ex.Message,
+            statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
 
 app.Run();
 
@@ -115,7 +135,7 @@ string GenerateJwtToken(User user, IConfiguration config)
 
     var claims = new[]
     {
-        new Claim("user_id", user.Id), // Для SignalR
+        new Claim("user_id", user.Id), // Р”Р»СЏ SignalR
         new Claim(ClaimTypes.Name, user.Username),
         new Claim(ClaimTypes.NameIdentifier, user.Id)
     };
@@ -131,6 +151,6 @@ string GenerateJwtToken(User user, IConfiguration config)
     return new JwtSecurityTokenHandler().WriteToken(token);
 }
 
-// Модели запросов
+// РњРѕРґРµР»Рё Р·Р°РїСЂРѕСЃРѕРІ
 record RegisterRequest(string Username, string Email, string Password);
 record LoginRequest(string Username, string Password);
