@@ -99,6 +99,11 @@ app.MapPost("/api/auth/login", async (LoginRequest request, IUserRepository user
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<MoodAnalysisHub>("/moodHub");
 
+app.MapGet("/health", ()=>
+        {
+        return TypedResults.Ok();
+        });
+
 app.Run();
 
 string GenerateJwtToken(User user, IConfiguration config)

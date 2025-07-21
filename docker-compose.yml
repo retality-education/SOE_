@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dotnet_app:
-    build: ./SOE
+    image: mydotnet:1
     container_name: soe_dotnet_app
     depends_on:
       - postgres
@@ -14,8 +14,17 @@ services:
     ports:
       - "5000:5000"
     platform: linux/amd64
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "dotnet","soe_dotnet_app.dll", "check-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 
+    
   postgres:
-    build: ./postgres
+    image: mypostgres:1
     container_name: soe_postgres
     ports:
       - "5433:5432"
@@ -24,16 +33,50 @@ services:
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: EmotionalMessenger
     platform: linux/amd64
+    networks:
+     - app_network
+
   redis:
     image: redis:7-alpine
     container_name: soe_redis
     ports:
       - "6379:6379"
     platform: linux/amd64
+    networks:
+     - app_network
+
 
   emotion_service:
-    build: ./emotion_service
+    image: mypython:1
     container_name: emotion_service
     ports:
       - "5001:5001"
     platform: linux/amd64
+    networks:
+     - app_network
+
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt  # Для HTTPS
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      dotnet_app:
+        condition: service_healthy
+      emotion_service:
+        condition: service_started
+    networks:
+      - app_network
+    restart: unless-stopped
+    
+volumes:
+  postgres:
+networks:
+  app_network:
+    name: soe__app_network
+    driver: bridge
